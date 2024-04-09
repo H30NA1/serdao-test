@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>User Management</title>
+    <link href="{{ asset('css/user.css') }}" rel="stylesheet"/>
+</head>
+<body>
+    {% if errors is defined and errors|length > 0 %}
+        <div class="alert">
+            <span class="close-btn" onclick="this.parentElement.style.display='none';">&times;</span>
+            {% for error in errors %}
+                <div class="error-message">{{ error.message }}</div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <h1>User form</h1>
+
+    <form action="/user" method="POST">
+        <input type="hidden" name="token" value="{{ csrf_token('user-item') }}">
+        <input type="hidden" id="id" name="id">
+        <label for="firstName">First name:</label><br>
+        <input type="text" id="firstName" name="firstname" value="{{ firstname|default('') }}" required><br>
+        <label for="lastName">Last name:</label><br>
+        <input type="text" id="lastName" name="lastname" value="{{ lastname|default('') }}" required><br>
+        <label for="address">Address:</label><br>
+        <input type="text" id="address" name="address" value="{{ address|default('') }}" required><br><br>
+        <input type="submit" value="Save user">
+    </form>
+
+    <h1>User list</h1>
+
+    <table>
+        <tr>
+            <th>User</th>
+            <th>Address</th>
+            <th>Action</th>
+        </tr>
+        {% for user in users %}
+            <tr>
+                <td>{{ user.getFullname() }}</td>
+                <td>{{ user.getAddress() }}</td>
+                <td>
+                    <a href="#" onclick="showUser('{{ user.getId() }}', '{{ user.getFirstName() }}', '{{ user.getLastName() }}', '{{ user.getAddress() }}')" class="action-link show">Show</a>
+                    <a href="#" onclick="confirmDelete('{{ user.getId() }}')" class="action-link delete">Delete</a>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+
+    <script type="text/javascript" src="{{ asset('js/user.js') }}"></script>
+</body>
+</html>
